@@ -1,0 +1,712 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>@karolikl - How to create a Web API no one wants to use</title>
+
+    <meta name="description" content="How to create a Web API no one wants to use">
+    <meta name="author" content="Karoline Klever">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+        if (window.location.search.match(/print-pdf/gi)) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = 'css/print/pdf.css';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <div class="reveal">
+
+        <!-- Any section element inside of this container is displayed as a slide -->
+        <div class="slides">
+            <section>
+                <h1>How to create a Web API</h1>
+                <h3>no one wants to use</h3>
+                <p>
+                    <small>By <a href="http://karolikl.com">Karoline Klever</a> / <a href="http://twitter.com/karolikl">@karolikl</a></small>
+                </p>
+                <a href="http://epinova.no"><img class="logo" src="/img/logo_epinova.png" /></a>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Taking a look</h2>
+                    <p>
+                        at the world of Web APIs...
+                    </p>
+                    <aside class="notes">
+                        Start out by looking at how the world of Web APIs has evolved, and where we are at today.
+                    </aside>
+                </section>
+
+                <section data-background="/img/modelS.jpg">
+                    <h2 class="white">Your car has one</h2>
+                    <aside class="notes">
+                        Tesla Model S, came out in 2012, and it has an API. We'll look at that later.
+                        <a href="http://docs.timdorr.apiary.io/">API</a>
+                    </aside>
+                </section>
+
+                <section data-background="/img/chuckNorris.jpg">
+                    <h2 class="white">Chuck Norris has one</h2>
+                    <aside class="notes">
+                        Probably only human being with an API. Although, on second thought, he's not completely human.
+                        <a href="http://api.icndb.com/jokes/random">API</a>
+                    </aside>
+                </section>
+
+                <section data-background="/img/dog.jpg">
+                    <h2 class="white">Your dog has one</h2>
+                    <aside class="notes">
+                        API for a dog collar monitoring the health and behaviour of your dog.
+                        <a href="http://www.fitbark.com/2013/11/18/fitbarks-api-goes-to-the-shelters/">API</a>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>The number of Web APIs</h2>
+                    <p>
+                        is increasing fast
+                    </p>
+                    <a href="http://www.programmableweb.com/news/9000-apis-mobile-gets-serious/2013/04/30" target="_blank">
+                        <img src="/img/pw-9k-growth-600x349.png" alt="Web API growth 2005-2013">
+                    </a>
+                    <aside class="notes">
+                        <ul>
+                            <li>Graph from ProgrammableWeb, they keep an API directory of all APIs out there</li>
+                            <li>Took 8 years to reach 10,000 APIs. Just reached 12,000.</li>
+                            <li>It has been predicted that # of public and private APIs climbing to between 100,000 and 200,000</li>
+                            <li>Next slides from founder of ProgrammableWeb in 2010.</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1995</h2>
+                    <blockquote cite="http://www.slideshare.net/duvander/the-new-api-apps-partners-and-income">
+                        "Why do we need a website?"
+                    </blockquote>
+                </section>
+
+                <section>
+                    <h2>2000</h2>
+                    <blockquote cite="http://www.slideshare.net/duvander/the-new-api-apps-partners-and-income">
+                        "Of course we have a website!"
+                    </blockquote>
+                </section>
+
+                <section>
+                    <h2>2005</h2>
+                    <blockquote cite="http://www.slideshare.net/duvander/the-new-api-apps-partners-and-income">
+                        "Why do we need an API?"
+                    </blockquote>
+                </section>
+
+                <section>
+                    <h2>2010</h2>
+                    <blockquote cite="http://www.slideshare.net/duvander/the-new-api-apps-partners-and-income">
+                        "Of course we have an API!"
+                    </blockquote>
+                </section>
+
+                <section data-background="/img/twitter.png">
+                    <aside class="notes">
+                        Twitter made restrictions to their API:
+                        <ul>
+                            <li>Require authentication</li>
+                            <li>Limit number of requests</li>
+                            <li>Changing developer guidelines to dev requirements</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section data-background="/img/netflix.png">
+                    <aside class="notes">
+                        In june, they announced they would be closing, and already then they stopped issuing developer keys. It is now closed..
+                    </aside>
+                </section>
+
+                <section data-background="/img/ESPN.png">
+                    <aside class="notes">
+                        ESPN published this 3 months ago, they’re discontinouing their APIs from december 2014. Total shut-down.
+                    </aside>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h2>URI Design</h2>
+                    <p>
+                        <strong>Badly named</strong> and <strong>inconsistent URIs</strong> that violate the <strong>Principle of Least Astonishment</strong>
+                        will make your web API just as disappointing as the movie <em>"Sharknado"</em>.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Principle of Least Astonishment</h2>
+                    <blockquote cite="http://en.wikipedia.org/wiki/Principle_of_least_astonishment">
+                        "[...] a programmer should try to think of the behavior that will least surprise someone who uses the program, rather than that
+                        behavior that is natural from knowing the inner workings of the program."
+                    </blockquote>
+                    <aside class="notes">
+                        <ul>
+                            <li>1984</li>
+                            <li>Number of WTFs</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section data-background="/img/sba.png">
+                    <aside class="notes">
+                        API provides URLs for official city and county government web sites and city and county location data.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Problem #1</h2>
+                    <h3>Inconsistent URI structure</h3>
+                    <p>
+                        We cannot guess the URI of an endpoint based on our experience with the other endpoints.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Problem #2</h2>
+                    <h3>URIs are not hackable</h3>
+                    <p><code>/all_links_for_city_of/chicago/il.json</code></p>
+                    <p class="fragment"><code>/all_links_for_city_of/chicago<del>/il.json</del></code></p>
+                    <p class="fragment"><code>/all_links_for_city_of<del>/chicago/il.json</del></code></p>
+                </section>
+
+                <section>
+                    <h2>Problem #3</h2>
+                    <h3>Link types</h3>
+                    <p class="aligned"><code>/<strong>all_links</strong>_for_city_of/chicago/il.json</code></p>
+                    <p class="aligned"><code>/<strong>all_links</strong>_for_county_of/cook%20county/il.json</code></p>
+                    <p class="aligned"><code>/<strong>primary_links</strong>_for_city_of/chicago/il.json</code></p>
+                    <p class="aligned"><code>/<strong>primary_links</strong>_for_county_of/cook%20county/il.json</code></p>
+
+                    <aside class="notes">
+                        Duplicating endpoints. Unless you’re using URL templating, this will be a problem.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Possible solution</h2>
+                    <h3>(One of many)</h3>
+                    <p class="aligned"><code>/links</code></p>
+                    <p class="aligned fragment"><code>/links/il</code></p>
+                    <p class="aligned fragment"><code>/links/il/cook%20county</code></p>
+                    <p class="aligned fragment"><code>/links/il/cook%20county/chicago</code></p>
+                    <p class="aligned fragment"><code>/links/il/cook%20county/chicago?type=primary</code></p>
+
+                    <aside class="notes">
+                        Possible solution, assuming you’re not building your API using hypermedia. If you are building your API using hypermedia, that’s awesome! But it’s also a complete different talk than the one I’m doing right now.
+                    </aside>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>HTTP Verbs</h2>
+                    <p>
+                        Why do we need anything other than <strong>GET</strong>?
+                        <aside class="notes">
+                            There's an old story called "The Spider of Doom" where a company developing a content management system suddenly found that their client had "magically" lost all the pages of their website. After a lot of searching around, they found that the Googlebot was able to bypass their authentication mechanisms and had therefore crawled all their "Delete page" links. This, of course, resulted in all the pages of the website being deleted.
+                        </aside>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>The most commonly used</h2>
+                    <p>GET</p>
+                    <p>PUT</p>
+                    <p>POST</p>
+                    <p>DELETE</p>
+                </section>
+
+                <section>
+                    <h2>Safe methods</h2>
+                    <blockquote cite="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">
+                        "... the convention has been established that the <strong>GET</strong> and HEAD methods <strong>SHOULD NOT</strong> have the significance of taking an action other than <strong>retrieval</strong>. These methods ought to be considered "safe"."
+                    </blockquote>
+                    <aside class="notes">
+                        <ul>
+                            <li>Methods without side-effects</li>
+                            <li><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank">Method Definitions</a></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Are they safe?</h2>
+                    <p class="fragment">GET: Yes</p>
+                    <p class="fragment">PUT: No</p>
+                    <p class="fragment">POST: No</p>
+                    <p class="fragment">DELETE: No</p>
+                    <aside class="notes">
+                        <ul>
+                            <li>Updating, creating and deleting has side-effects</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Idempotent methods</h2>
+                    <p>Methods we can issue the same request against as many times as we want without changing the result.</p>
+                    <aside class="notes">
+                        <ul>
+                            <li>GET, PUT, DELETE, HEAD</li>
+                            <li>Identical requests</li>
+                            <li>Example: Get will always retrieve a resource</li>
+                            <li>Example: Delete will always result in the resource not existing</li>
+                            <li><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank">Method Definitions</a></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Are they idempotent?</h2>
+                    <p class="fragment">GET: Yes</p>
+                    <p class="fragment">PUT: Yes</p>
+                    <p class="fragment">POST: No</p>
+                    <p class="fragment">DELETE: Yes</p>
+                    <aside class="notes">
+                        <ul>
+                            <li>Get -> Will always retrieve the requested resource</li>
+                            <li>Put -> Will always result in the resource being updated</li>
+                            <li>Post -> Posting an order for a car, repeating the request will create another order</li>
+                            <li>Delete -> Will always result in the resource being gone</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section data-background="/img/teslaapi.png">
+                    <aside class="notes">
+                        <ul>
+                            <li>The greatest car ever built</li>
+                            <li>Batmobile API</li>
+                            <li>Hurts to find something wrong with the API</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Get climate</h2>
+                    <pre><code>GET /vehicles/{id}/command/climate_state</code></pre>
+                    <pre class="fragment"><code>
+{
+    "inside_temp": 17.0,       
+    "outside_temp": 9.5,         
+    "driver_temp_setting": 22.6, 
+    "passenger_temp_setting": 22.6, 
+    "is_auto_conditioning_on": false, 
+    "is_front_defroster_on": null,
+    "is_rear_defroster_on": false,
+    "fan_status": 0             
+}
+                        </code></pre>
+                    <aside class="notes">
+                        <ul>
+                            <li>Get climate state of the car</li>
+                            <li>Safe: No side effects to getting the climate state</li>
+                            <li>Idempotent: X requests will always give info on climate</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Open sunroof</h2>
+                    <pre><code>GET /vehicles/{id}/command/sun_roof_control?state=open</code></pre>
+                    <aside class="notes">
+                        <ul>
+                            <li>Problem:</li>
+                            <li>Not safe: It changes the state of the car</li>
+                            <li>Idempotent: X requests will always result in the sun roof being opened</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Possible solution</h2>
+                    <pre class="fragment"><code>GET /vehicles/{id}/command/sun_roof_control</code></pre>
+                    <pre class="fragment"><code>
+{
+    "state": "open"       
+}
+                        </code></pre>
+                    <pre class="fragment"><code>PUT /vehicles/{id}/command/sun_roof_control?state=open</code></pre>
+                    <pre class="fragment"><code>
+{
+    "result": true       
+}
+                        </code></pre>
+                </section>
+
+                <section>
+                    <h2>The other Verbs?</h2>
+                    <table>
+                        <tbody>
+                            <tr class="fragment">
+                                <th>GET</th>
+                                <td>Returns the state of the sun roof (open/closed)</td>
+                            </tr>
+                            <tr class="fragment">
+                                <th>PUT</th>
+                                <td>Open/close the sunroof</td>
+                            </tr>
+                            <tr class="fragment">
+                                <th>POST</th>
+                                <td>Not supported, cannot create new sun roof</td>
+                            </tr>
+                            <tr class="fragment">
+                                <th>DELETE</th>
+                                <td>Not supported, cannot delete sun roof</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section data-background="/img/teslareddit.png">
+                    <aside class="notes">
+                        <a href="http://www.reddit.com/r/programming/comments/29e7u1/http_get_vehiclesidcommandhonk_horn_to_honk_in_a/">Thread on Reddit</a>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>A must read</h2>
+                    <p>Section 9 «Method definitions» in RFC 2616</p>
+                    <a href="https://tools.ietf.org/html/rfc2616#section-9">https://tools.ietf.org/html/rfc2616#section-9</a>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>HTTP Status Codes</h2>
+                    <p>Everyone just loves an <em>"error in disguise"</em>.</p>
+                </section>
+
+                <section data-background="/img/worldbank.png"></section>
+
+                <section>
+                    <h2>Problem #1</h2>
+                    <h3>Disguising your errors</h3>
+                    <p>
+                        Invalid requests return with a 200 OK status code, giving the impression that the request was successful.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Problem #2</h2>
+                    <h3>Displaying your internals</h3>
+                    <p>
+                        Including a detailed error report or stack trace makes your Web API vulnerable to attack
+                    </p>
+                </section>
+
+                <section>
+                    <h2>The basics</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>2xx</th>
+                                <td>Awesome!</td>
+                            </tr>
+                            <tr>
+                                <th>4xx</th>
+                                <td>The user of the API made a mistake</td>
+                            </tr>
+                            <tr>
+                                <th>5xx</th>
+                                <td>The creator of the API made a mistake</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>2xx: The request has succeeded</li>
+                            <li>4xx: The request could not be understood by the server due to malformed syntax</li>
+                            <li>5xx:The server encountered an unexpected condition which prevented it from fulfilling the request</li>
+                            <li>If serious: 201 Created, 304 Not Modified, 401 Unauthorized and 404 Not Found</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Possible solution</h2>
+                    <pre class="fragment"><code>GET http://api.worldbank.org/countries/a?format=json </code></pre>
+                    <pre class="fragment"><code>404 Not Found</code></pre>
+                    <pre class="fragment"><code>GET http://api.worldbank.org/topic?format:json </code></pre>
+                    <pre class="fragment"><code>400 Bad Request</code></pre>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>First gave us 200 OK -> 404 Not Found</li>
+                            <li>Second gave us 500 Internal Server Error -> 400 Bad Request</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>A must read</h2>
+                    <p>Section 10 «Status Code Definitions» in RFC 2616</p>
+                    <a href="https://tools.ietf.org/html/rfc2616#section-10">https://tools.ietf.org/html/rfc2616#section-10</a>
+                </section>
+
+            </section>
+
+            <section>
+                <section data-state="nofireworks">
+                    <h2>Result Formatting</h2>
+                    <p>Dictating the format will drive developers away.</p>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Not acceptable to only provide XML results</li>
+                            <li>Dictating the format drives developers away</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section data-state="fireworks">
+                    <h2>XML is on decline</h2>
+                    <p>Hurray!</p>
+                    <a href="http://www.programmableweb.com/news/1-5-apis-say-bye-xml/2011/05/25" target="_blank">
+                        <img src="/img/byexml.png" alt="Bye XML">
+                    </a>
+                </section>
+
+                <section data-state="nofireworks">
+                    <h2>Possible solutions</h2>
+                    <ul>
+                        <li>URL extensions</li>
+                        <li>Query string parameters</li>
+                        <li>Content negotiation</li>
+                    </ul>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>1: Run, dictate xml. No other formats</li>
+                            <li>2: Run, add .json, add .xml. Show fallback again. Problem: 2 different URLs supply same data, suggest 2 different resources. 2 different representations of one resource.</li>
+                            <li>3. Run, add ?format=json, ?format=xml. Show fallback again. Each resource has 1 URL and different representations retrieved by queryparam. Scheduling dinner with friend -> suggest. We want that in API.</li>
+                            <li>4. Run -> view header -> Content-Type. Add Accept: text/turtle. Add Accept: text/turtle, application/json. Add Accept: text/turtle, application/json, text/xml</li>
+                        </ul>
+                    </aside>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h2>Versioning</h2>
+                    <p>However perfect you make your web API, you're bound to find a way that's even more perfect before long, and then you'll need to launch a new version.</p>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Many solutions, not "one". You choose</li>
+                            <li>Never break existing versions</li>
+                            <li>Plan versioning from the start</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section data-background="/img/payex.png">
+                    <p class="fragment" style="color:black">Capture5 -> Complete / Cancel2</p>
+                </section>
+
+                <section>
+                    <h2>URL versioning</h2>
+                    <pre><code>GET https://api.twitter.com/1.1/trends/place.json?id=1 </code></pre>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Pro: Easy to change the structure of your API</li>
+                            <li>Pro: No confusion as to what version you are using, you can send the URL</li>
+                            <li>Con: Maintain quite a large number of URLs as time goes by (templating might work)</li>
+                            <li>Con: Clients wanting to upgrade will have to change all their URLs</li>
+                            <li>Con: No way to say: "Always give me the newest version of your API".</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Query string parameters</h2>
+                    <pre><code>GET http://api-public.netflix.com/catalog/titles/series/7002352?v=1.5 </code></pre>
+
+                    <pre><code>GET https://api.foursquare.com/v2/venues/40a55d80f964a52020f31ee3?oauth_token=XXX&amp;v=YYYYMMDD </code></pre>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Pro: Optional -> possible to always get the newest version. </li>
+                            <li>Pro: Maintenance is easier as the URL is the same for each version</li>
+                            <li>Pro: You can send the URL to someone else and they will see the same version of the API as you</li>
+                            <li>Con: Harder to restructure the URI design</li>
+                            <li>Great when the changes done from version to version are small -> No breaking changes</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Vendor Specific Accept Header</h2>
+                    <pre class="fragment"><code class="haskell">HEADER Accept: {type}/vnd.{company}.{version}+{type}</code></pre>
+
+                    <pre class="fragment"><code class="haskell">HEADER Accept: {type}/vnd.{company}+{type}; version={version}</code></pre>
+
+                    <pre class="fragment"><code class="haskell">HEADER Accept: application/vnd.github.v3+json</code></pre>
+
+                    <pre class="fragment"><code class="haskell">HEADER Accept: application/vnd.github+json; version=3</code></pre>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Result formatting -> Content negotiation with accept headers to determine the format</li>
+                            <li>GitHub, RedRata</li>
+                            <li>Pro: Result formatting + versioning in the same accept header</li>
+                            <li>Pro: URLs are always the same</li>
+                            <li>Con: Harder to test -> cannot send url</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Custom Request Header</h2>
+                    <pre class="fragment"><code>HEADER x-ms-version: 2014-02-14</code></pre>
+
+                    <pre class="fragment"><code>HEADER api-version: 2</code></pre>
+
+                    <aside class="notes">
+                        Were deprecated in RFC 6648 as most downstream cache servers don’t care about custom headers.
+                        https://tools.ietf.org/html/rfc6648
+                    </aside>
+                </section>
+
+                <section data-background="/img/troyhunt.png">
+                    <aside class="notes">
+                        <ul>
+                            <li>HaveIBeenPawned</li>
+                            <li>URL versioning</li>
+                            <li>Vendor Specific Accept Header</li>
+                            <li>Custom Request Headers</li>
+                        </ul>
+                    </aside>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h2>Summary</h2>
+                    <p class="fragment">URI design</p>
+                    <p class="fragment">HTTP Verbs</p>
+                    <p class="fragment">HTTP Status Codes</p>
+                    <p class="fragment">Result Formatting</p>
+                    <p class="fragment">Versioning</p>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Inconsistency & bad naming</li>
+                            <li>Only use GET. Used them wrong</li>
+                            <li>Disguise errors with 200 OKs. Display your internals</li>
+                            <li>Dictate the format</li>
+                            <li>Don't plan for versioning. Break existing versions</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Questions?</h2>
+                    <p>Thank you!</p>
+                    <p>
+                        <small>By <a href="http://karolikl.com">Karoline Klever</a> / <a href="http://twitter.com/karolikl">@karolikl</a> / <a href="mailto:karolikl@gmail.com">karolikl@gmail.com</a></small>
+                    </p>
+                    <a href="http://epinova.no"><img class="logo" src="/img/logo_epinova.png" /></a>
+                </section>
+            </section>
+        </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+        // Full list of configuration options available here:
+        // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            width: 1200,
+
+            theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+            transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+            // Parallax scrolling
+            // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+            // parallaxBackgroundSize: '2100px 900px',
+
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+            { src: 'lib/js/classList.js', condition: function () { return !document.body.classList; } },
+            { src: 'plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+            { src: 'plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+            { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+            { src: 'plugin/zoom-js/zoom.js', async: true, condition: function () { return !!document.body.classList; } },
+            { src: 'plugin/notes/notes.js', async: true, condition: function () { return !!document.body.classList; } }
+            ]
+        });
+
+        Reveal.addEventListener('fireworks', function () {
+            fireworks();
+        }, false);
+
+        Reveal.addEventListener('nofireworks', function () {
+            stopfire();
+        }, false);
+
+    </script>
+
+    <script>
+        // Fireworks Effect Javascript
+        // copyright 3rd April 2005, 13th February 2009
+        // by Stephen Chapman http://javascript.about.com
+        // permission to use this Javascript on your web page is granted
+        // provided that all of the code in this script (including these
+        // comments) is used without any alteration
+
+        var stopafter = 0;
+        var firestop = []; var fire = []; var stdDOM = document.getElementById; var nsDOM = ((navigator.appName.indexOf('Netscape') != -1) && (parseInt(navigator.appVersion) == 4)); function pageWidth() { return window.innerWidth != null ? window.innerWidth : document.body != null ? document.body.clientWidth : 700; } function pageHeight() { return window.innerHeight != null ? window.innerHeight : document.body != null ? document.body.clientHeight : 500; } function posLeft() { return typeof window.pageXOffset != 'undefined' ? window.pageXOffset : document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ? document.body.scrollLeft : 0; } function posTop() { return typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0; } var hD = "0123456789ABCDEF"; function d2h(d) { return hD.substr(d >>> 4, 1) + hD.substr(d & 15, 1); } layernum = 0; piece = function (parent) { this.elem = null; if (nsDOM) { if (parent == null) this.elem = new Layer(1); else { this.elem = new Layer(1, parent.elem); this.style.visibility = "inherit"; } this.parent = parent; this.style = this.elem; } else if (stdDOM) { if (parent == null) this.parent = document.body; else this.parent = parent.elem; this.elem = document.createElement('div'); var xName = "xLayer" + layernum++; this.elem.setAttribute('id', xName); elemc = document.createTextNode('.'); this.elem.appendChild(elemc); this.parent.appendChild(this.elem); this.style = this.elem.style; document.getElementById(xName).style.lineHeight = '3px'; document.getElementById(xName).style.color = '#fff'; document.getElementById(xName).style.position = 'absolute'; } window[this.elem.id] = this; this.ay = .1; this.type = 0; }; piece.prototype.moveTo = function (x, y) { if (nsDOM) this.elem.moveTo(x, y); else { this.style.left = x + "px"; this.style.top = y + "px"; } }; piece.prototype.setC = function (colour) { if (nsDOM) this.elem.bgColor = colour; else this.style.backgroundColor = colour == null ? 'transparent' : colour; }; piece.prototype.fire = function (sx, sy, fw) { var a = Math.random() * Math.PI * 2; switch (fw) { case 1: var s = Math.random() * 2; break; case 2: var s = 2; break; case 3: var s = (Math.PI * 2) - a - Math.random(); break; case 4: var s = a - Math.random(); break; default: var s = Math.random() * 2; if (Math.random() > .6) s = 1.5; } this.dx = s * Math.sin(a); this.dy = s * Math.cos(a) - 2; this.x = sx; this.y = sy; this.moveTo(sx, sy); }; piece.prototype.sCol = function (hex, hex2, cl) { switch (cl) { case 1: this.setC("#" + hex + hex2 + "00"); break; case 2: this.setC("#00" + hex + "00"); break; case 3: this.setC("#00" + hex + hex2); break; case 4: this.setC("#" + hex + "0000"); break; case 5: this.setC("#" + hex + hex + "00"); break; case 6: this.setC("#" + hex + hex + hex); break; case 7: this.setC("#" + hex2 + hex + "00"); break; default: this.setC("#" + hex + hex2 + hex); } }; piece.prototype.animate = function (step, cl) { var colour = (step > 25) ? Math.random() * (380 - (step * 5)) : 255 - (step * 4); var hex = d2h(colour - 112); if (colour < 112) hex = d2h(colour); this.sCol(d2h(colour), hex, cl); this.dy += this.ay; this.x += this.dx; this.y += this.dy; this.moveTo(this.x, this.y); }; fo = function (numst) { this.id = "fo" + fo.count++; this.sp = new Array(); for (i = 0 ; i < numst; i++) { this.sp[i] = new piece(); if (nsDOM) { this.sp[i].style.clip.top = 0; this.sp[i].style.clip.left = 0; this.sp[i].style.clip.bottom = 3; this.sp[i].style.clip.right = 3; } else this.sp[i].style.clip = "rect(" + 0 + " " + 3 + " " + 3 + " " + 0 + ")"; this.sp[i].style.visibility = "visible"; } this.step = 0; window[this.id] = this; fire.push(this); firestop.push(setInterval("window." + this.id + ".animate()", 15)); }; fo.count = 0; fo.prototype.animate = function () { if (this.step > 55) this.step = 0; if (this.step == 0) { var x = posLeft() + 50 + (Math.random() * (pageWidth() - 200)); var y = posTop() + 50 + (Math.random() * (pageHeight() - 250)); var fw = Math.floor(Math.random() * 5); this.cl = Math.floor(Math.random() * 8); for (i = 0 ; i < this.sp.length ; i++) this.sp[i].fire(x, y, fw); } this.step++; for (i = 0 ; i < this.sp.length ; i++) this.sp[i].animate(this.step, this.cl); };
+        function stopfire() { for (var i = firestop.length - 1; i >= 0; i--) { clearInterval(firestop[i]); for (var j = fire[i].sp.length - 1; j >= 0; j--) { fire[i].sp[j].style.visibility = "hidden"; } } }
+        function fireworks() { new fo(50); setTimeout('new fo(50)', 750); if (stopafter > 0) { setTimeout('stopfire()', stopafter * 60000); } }
+        //window.onload = fireworks;
+
+    </script>
+</body>
+</html>
